@@ -1,0 +1,3 @@
+rootProject.name = 'shared_elements'
+
+include ':app'
