@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Dimensions, Platform, StyleSheet, Text, View, Image, TouchableWithoutFeedback } from 'react-native';
+import { TouchableOpacity, Animated, ScrollView, Dimensions, Platform, StyleSheet, Text, View, Image, TouchableWithoutFeedback } from 'react-native';
 
 let images = [
   { id: '1', src: require('./images/Bogobiri-house.jpg'), name: 'Bogobiri', description: 'Bogobiri is located in the high brow area of Ikoyi. It is one of the many spots to visit in Lagos that come alive mainly at night. It’s a unique place where food meets arts. You would want to go to Bogobiri on Thursday nights for ‘freedom hall’ and Friday nights for ‘Taruwa’. If you’re a lover of spoken word and good music – from jazz to Highlife and AfroBeat – then Bogobiri is for you! Interestingly, it also offers space for occasions like bridal showers, birthdays and more.' },
@@ -27,6 +27,9 @@ export default class App extends Component {
     this.oldposiotion; //position of the image in the scroll view
     this.imageProperties = {};
     this.activeImage = {}
+    this.translateY = new Animated.Value(0);
+    this.animatedWidth = new Animated.Value(0);
+    this.translateText = new Animated.Value(0);
 
   }
 
@@ -40,24 +43,43 @@ export default class App extends Component {
         myObject["x"] = pageX;
         myObject["y"] = pageY;
         this.setState({ currentImageStyle: myObject })
-        console.log(this.currentImageStyle);
-      })
-
-      this.activeImage.measure((x, y, width, height, pageX, pageY) => {
-        console.log("width: " + width);
-        console.log("height: " + height);
-        console.log("pageX: " + pageX);
-        console.log("pageY: " + pageY);
       })
     })
+
+    Animated.parallel([
+      Animated.timing(this.translateY, {
+        toValue: 1,
+        duration: 800,
+      }),
+      Animated.timing(this.animatedWidth, {
+        toValue: 1,
+        duration: 1000
+      }),
+      Animated.timing(this.translateText, {
+        toValue: 1,
+        duration: 800
+      })
+    ]).start();
   }
 
   render() {
+    let moveImage = this.translateY.interpolate({
+      inputRange: [0, 1],
+      outputRange: [this.state.currentImageStyle.y, -90]
+    })
+    let moveWidth = this.animatedWidth.interpolate({
+      inputRange: [0, 1],
+      outputRange: [this.state.currentImageStyle.width, Dimensions.get('window').width]
+    })
+    let moveText = this.translateText.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['-35%', '0%']
+    })
     let activeImageStyle = {
       position: 'absolute',
-      width: this.state.currentImageStyle.width,
+      width: moveWidth,
       height: this.state.currentImageStyle.height,
-      top: this.state.currentImageStyle.y
+      top: moveImage
     }
 
     return (
@@ -72,13 +94,16 @@ export default class App extends Component {
           })}
         </ScrollView>
         <View style={[StyleSheet.absoluteFill, { alignItems: 'center', }]}>
-          <View style={{ flex: 2, marginBottom: '10%' }}>
-            <Image ref={(image) => this.activeImage = image} source={this.state.isImageSelected ? this.state.currentImage.src : null} style={[{ alignSelf: 'center' }, activeImageStyle]} />
+          <View style={{ zIndex: 100, flex: 2, marginBottom: '10%' }}>
+            <Animated.Image source={this.state.isImageSelected ? this.state.currentImage.src : null} style={[{ alignSelf: 'center', borderRadius: 15 }, activeImageStyle]} />
           </View>
-          <View style={{ positio: 'absolute', bottom: '-35%', paddingHorizontal: '3%', flex: 1, backgroundColor: 'white' }}>
+          <TouchableOpacity style={{ zIndex: 1001, position: 'absolute', top: '2%', right: '5%', }}>
+            <Text style={{ fontSize: 25, color: "black" }}>X</Text>
+          </TouchableOpacity>
+          <Animated.View style={{ positio: 'absolute', bottom: moveText, paddingHorizontal: '3%', flex: 1, backgroundColor: 'white' }}>
             <Text style={{ color: "black", fontSize: 25, fontWeight: '500', marginBottom: '3%' }}>{this.state.currentImage.name}</Text>
             <Text style={{ color: "black", fontSize: 14, lineHeight: 20 }}>{this.state.currentImage.description}</Text>
-          </View>
+          </Animated.View>
         </View>
       </View>
     );
