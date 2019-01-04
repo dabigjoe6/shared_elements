@@ -23,6 +23,7 @@ export default class App extends Component {
     }
 
     this.openImage = this.openImage.bind(this);
+    this.closeImage = this.closeImage.bind(this);
     this.newPosition; //position of the detail view
     this.oldposiotion; //position of the image in the scroll view
     this.imageProperties = {};
@@ -30,6 +31,7 @@ export default class App extends Component {
     this.translateY = new Animated.Value(0);
     this.animatedWidth = new Animated.Value(0);
     this.translateText = new Animated.Value(0);
+    this.animatedOpacity = new Animated.Value(0);
 
   }
 
@@ -58,8 +60,35 @@ export default class App extends Component {
       Animated.timing(this.translateText, {
         toValue: 1,
         duration: 800
+      }),
+      Animated.timing(this.animatedOpacity, {
+        toValue: 1,
+        duration: 1000
       })
     ]).start();
+  }
+
+  closeImage() {
+    Animated.parallel([
+      Animated.timing(this.translateY, {
+        toValue: 0,
+        duration: 800,
+      }),
+      Animated.timing(this.animatedWidth, {
+        toValue: 0,
+        duration: 1000
+      }),
+      Animated.timing(this.translateText, {
+        toValue: 0,
+        duration: 800
+      }),
+      Animated.timing(this.animatedOpacity, {
+        toValue: 0,
+        duration: 1000
+      })
+    ]).start((x) => {
+      this.setState({ isImageSelected: false })
+    });
   }
 
   render() {
@@ -97,8 +126,8 @@ export default class App extends Component {
           <View style={{ zIndex: 100, flex: 2, marginBottom: '10%' }}>
             <Animated.Image source={this.state.isImageSelected ? this.state.currentImage.src : null} style={[{ alignSelf: 'center', borderRadius: 15 }, activeImageStyle]} />
           </View>
-          <TouchableOpacity style={{ zIndex: 1001, position: 'absolute', top: '2%', right: '5%', }}>
-            <Text style={{ fontSize: 25, color: "black" }}>X</Text>
+          <TouchableOpacity onPress={() => this.closeImage()} style={{ zIndex: 1001, position: 'absolute', top: '2%', right: '5%', }}>
+            <Animated.Text style={{ opacity: this.animatedOpacity, fontSize: 25, color: "black" }}>X</Animated.Text>
           </TouchableOpacity>
           <Animated.View style={{ positio: 'absolute', bottom: moveText, paddingHorizontal: '3%', flex: 1, backgroundColor: 'white' }}>
             <Text style={{ color: "black", fontSize: 25, fontWeight: '500', marginBottom: '3%' }}>{this.state.currentImage.name}</Text>
