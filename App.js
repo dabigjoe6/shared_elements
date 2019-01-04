@@ -17,7 +17,8 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      isImageSelected: false
+      isImageSelected: false,
+      currentImage: {}
     }
 
     this.openImage = this.openImage.bind(this);
@@ -25,28 +26,29 @@ export default class App extends Component {
     this.oldposiotion; //position of the image in the scroll view
   }
 
-  openImage() {
+  openImage(index) {
     this.setState({ isImageSelected: true })
+    this.setState({ currentImage: images[index] })
   }
   render() {
     return (
       <View>
         <ScrollView>
-          {images.map((image => {
+          {images.map((image, index) => {
             return (
-              <TouchableWithoutFeedback key={image.id} onPress={() => this.openImage()}>
+              <TouchableWithoutFeedback key={image.id} onPress={() => this.openImage(index)}>
                 <Image style={styles.image} resizeMode='cover' source={image.src} />
               </TouchableWithoutFeedback>
             )
-          }))}
+          })}
         </ScrollView>
         <View style={[StyleSheet.absoluteFill, { alignItems: 'center', }]}>
           <View style={{ flex: 2, marginBottom: '10%' }}>
-            <Image source={this.state.isImageSelected ? images[0].src : null} style={{ width: Dimensions.get('window').width, }} />
+            <Image source={this.state.isImageSelected ? this.state.currentImage.src : null} style={{ width: Dimensions.get('window').width, }} />
           </View>
           <View style={{ positio: 'absolute', bottom: '-35%', paddingHorizontal: '3%', flex: 1, backgroundColor: 'white' }}>
-            <Text style={{ color: "black", fontSize: 25, fontWeight: '500', marginBottom: '3%' }}>{images[0].name}</Text>
-            <Text style={{ color: "black", fontSize: 14, lineHeight: 20 }}>{images[0].description}</Text>
+            <Text style={{ color: "black", fontSize: 25, fontWeight: '500', marginBottom: '3%' }}>{this.state.currentImage.name}</Text>
+            <Text style={{ color: "black", fontSize: 14, lineHeight: 20 }}>{this.state.currentImage.description}</Text>
           </View>
         </View>
       </View>
