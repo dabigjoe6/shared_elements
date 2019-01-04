@@ -18,33 +18,62 @@ export default class App extends Component {
 
     this.state = {
       isImageSelected: false,
-      currentImage: {}
+      currentImage: {},
+      currentImageStyle: {}
     }
 
     this.openImage = this.openImage.bind(this);
     this.newPosition; //position of the detail view
     this.oldposiotion; //position of the image in the scroll view
+    this.imageProperties = {};
+    this.activeImage = {}
+
   }
 
   openImage(index) {
     this.setState({ isImageSelected: true })
-    this.setState({ currentImage: images[index] })
+    this.setState({ currentImage: images[index] }, () => {
+      this.imageProperties[index].measure((x, y, width, height, pageX, pageY) => {
+        let myObject = {}
+        myObject["width"] = width;
+        myObject["height"] = height;
+        myObject["x"] = pageX;
+        myObject["y"] = pageY;
+        this.setState({ currentImageStyle: myObject })
+        console.log(this.currentImageStyle);
+      })
+
+      this.activeImage.measure((x, y, width, height, pageX, pageY) => {
+        console.log("width: " + width);
+        console.log("height: " + height);
+        console.log("pageX: " + pageX);
+        console.log("pageY: " + pageY);
+      })
+    })
   }
+
   render() {
+    let activeImageStyle = {
+      position: 'absolute',
+      width: this.state.currentImageStyle.width,
+      height: this.state.currentImageStyle.height,
+      top: this.state.currentImageStyle.y
+    }
+
     return (
       <View>
         <ScrollView>
           {images.map((image, index) => {
             return (
               <TouchableWithoutFeedback key={image.id} onPress={() => this.openImage(index)}>
-                <Image style={styles.image} resizeMode='cover' source={image.src} />
+                <Image ref={(image) => this.imageProperties[index] = image} style={styles.image} resizeMode='cover' source={image.src} />
               </TouchableWithoutFeedback>
             )
           })}
         </ScrollView>
         <View style={[StyleSheet.absoluteFill, { alignItems: 'center', }]}>
           <View style={{ flex: 2, marginBottom: '10%' }}>
-            <Image source={this.state.isImageSelected ? this.state.currentImage.src : null} style={{ width: Dimensions.get('window').width, }} />
+            <Image ref={(image) => this.activeImage = image} source={this.state.isImageSelected ? this.state.currentImage.src : null} style={[{ alignSelf: 'center' }, activeImageStyle]} />
           </View>
           <View style={{ positio: 'absolute', bottom: '-35%', paddingHorizontal: '3%', flex: 1, backgroundColor: 'white' }}>
             <Text style={{ color: "black", fontSize: 25, fontWeight: '500', marginBottom: '3%' }}>{this.state.currentImage.name}</Text>
