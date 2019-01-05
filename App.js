@@ -10,6 +10,13 @@ let images = [
   { id: '6', src: require('./images/NATIONAL-THEATRE-LAGOS.jpg'), name: 'National Theatre', description: 'Constructed in 1976, it is the cultural center for performing arts in Nigeria. The well-equipped hall has the capacity to hold 3000 people. It hosted the Festival of Arts and Culture (FESTAC) in 1977. The building has a bar, a restaurant, and 2 grand cinema halls. The great cultural performances coupled with the theatre’s architectural grandeur have pulled the attention of people from various walks of life.' },
   { id: '7', src: require('./images/Jazz-hole.jpg'), name: 'Jazz hole', description: 'An offspring of Glendora books, the Jazz hole is one of the amazing spots in Lagos. It is located at Awolowo Road, Ikoyi. It is a place where literature meets good music. There’s a plethora of African artwork in the hole to help create a relaxed atmosphere. It’s known as one of the best cultural music shops in the country. It has a snack bar with great coffee and yummy sandwiches among other snacks.' },
   { id: '8', src: require('./images/GET-arena.jpg'), name: 'GET arena', description: 'It is located directly opposite the Palms shopping mall. Go-karting is a typical example of a break from the norm and children will also attest to this while they enjoy it. They also have a bar and an arcade with a wall climbing section. Worried about what fun spots in Lagos to visit? The GET arena would be an awesome choice.' },
+  { id: '9', src: require('./images/lekki-leisure-lake.jpg'), name: "Lekki Leisure Lake", description: "Encourage your children to get active and engage their muscles by jumping on the Quad bikes. They can also get on the Jet Ski with a guide. This place is equally enjoyable for adults. There are benches and chairs to sit on while enjoying food at the lakeside. Lekki Leisure Lake is a great place to visit on weekends and holidays." },
+  { id: '10', src: require('./images/nike-art-gallery.jpg'), name: "Nike Art Gallery", description: "owned by Nike Davies Okundaye, her inspiring story from humble beginnings without a University degree to delivering lectures at Harvard University has increased the popularity of the gallery. For all things, paintings, drawings, stones, beads, adire and wholesome arts, Nike Art Gallery is a great place." },
+  { id: '11', src: require('./images/lekki-1.jpg'), name: "Lekki Conservation center", description: 'This 21-year-old conservation centre is run by the Nigerian conservation foundation (NCF). If you appreciate seeing plants and animals in their natural habitat then this place is a must visit for you. There’s a lot of exploration themed activities to carry out there, not forgetting the fearless canopy walk. You will have a time of your life discovering the nature park and appreciating its splendor. Beware, there’s a lot of walking around to be done at this park, so be ready!' },
+  { id: '12', src: require('./images/lekki-bridge.jpg'), name: "Lekki Ikoyi link bridge", description: 'This bridge was commissioned by former Lagos State governor -Babatunde Raji Fashola. It covers a distance of 1.358 kilometres and links the Phase 1 area of Lekki with Ikoyi. It’s not just a link bridge, but has also become a renowned Jogging spot in recent times; Even Facebook CEO, Mark Zuckerberg has jogged on this bridge. The bridge bears quite a similarity with the popular Eiffel Tower in Paris and is now being regarded as one of the most photographed places in Lagos.' },
+  { id: '13', src: require('./images/Silverbird-Galleria.jpg'), name: "Silverbird Galleria", description: "Visit Silverbird Galleria to see a movie. There are also a host of shops there to shop at and nice restaurants to satisfy your food cravings." },
+  { id: '14', src: require('./images/Empire-sport.jpg'), name: "Empire sports paintball", description: "This is a speedball airfield located at Elegushi Beach Lekki Lagos. A recreational center for family and friends. It prides itself on being the most recognized name when it comes to paintballing in Nigeria. Also serves as a suitable venue for children’s birthday parties and small occasions." },
+  { id: '15', src: require('./images/federal-palace-lobby.jpg'), name: "Federal Palace Hotel", description: "Federal Palace Hotel is a 150-room hotel established in 1960. The hotel overlooks the Atlantic Ocean and is located in the commercial hub of Victoria Island in Lagos. The hotel is regarded as one the top spots to visit, as it brings this air of class and luxury, and just smells money! all the way." },
 ]
 
 export default class App extends Component {
@@ -51,19 +58,19 @@ export default class App extends Component {
     Animated.parallel([
       Animated.timing(this.translateY, {
         toValue: 1,
-        duration: 800,
+        duration: 200,
       }),
       Animated.timing(this.animatedWidth, {
         toValue: 1,
-        duration: 1000
+        duration: 400
       }),
       Animated.timing(this.translateText, {
         toValue: 1,
-        duration: 800
+        duration: 200
       }),
       Animated.timing(this.animatedOpacity, {
         toValue: 1,
-        duration: 1000
+        duration: 400
       })
     ]).start();
   }
@@ -72,22 +79,23 @@ export default class App extends Component {
     Animated.parallel([
       Animated.timing(this.translateY, {
         toValue: 0,
-        duration: 800,
+        duration: 200,
       }),
       Animated.timing(this.animatedWidth, {
         toValue: 0,
-        duration: 1000
+        duration: 400
       }),
       Animated.timing(this.translateText, {
         toValue: 0,
-        duration: 800
+        duration: 200
       }),
       Animated.timing(this.animatedOpacity, {
         toValue: 0,
-        duration: 1000
+        duration: 400
       })
     ]).start((x) => {
       this.setState({ isImageSelected: false })
+      this.setState({ currentImageStyle: {} })
     });
   }
 
